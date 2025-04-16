@@ -1,0 +1,38 @@
+---
+import { tg_links } from "@/data/links"
+import { Icon } from "astro-icon/components"
+import Container from "./Container.astro"
+// @bshnvda
+---
+
+<footer class="bg-white">
+	<Container>
+		<div class="grid py-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			{
+				tg_links &&
+					tg_links.map(link => (
+						<a href={link.link} target="_blank" class="flex gap-1 items-center">
+							<Icon name="mdi:telegram" />
+							<span class="hover:text-blue-600 text-blue-500 underline underline-offset-4">
+								{link.label}
+							</span>
+						</a>
+					))
+			}
+		</div>
+	</Container>
+	<div class="py-5 bg-zinc-900">
+		<Container class="flex justify-between flex-wrap gap-3">
+			<p class="text-white">
+				© {new Date().getFullYear()}
+				<a href="https://t.me/bshnvda" class="text-blue-400 underline underline-offset-4"
+					>@bshnvda</a
+				>
+			</p>
+			<a
+				href="https://t.me/legion_free"
+				class="text-blue-300 underline underline-offset-4">Разработка сайтов</a
+			>
+		</Container>
+	</div>
+</footer>

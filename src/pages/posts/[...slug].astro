@@ -1,0 +1,58 @@
+---
+import Layout from "@/layouts/Layout.astro"
+import { getCollection, render } from "astro:content"
+
+export async function getStaticPaths() {
+	const posts = await getCollection("posts")
+	return posts.map(post => ({
+		params: { slug: post.id },
+		props: post,
+	}))
+}
+const post = Astro.props
+const { Content } = await render(post)
+---
+
+<Layout {...post.data} type ogImage={post.data.ogImage?.src}>
+	<a
+		href="/posts"
+		class="bg-white font-medium text-black px-3 py-1.5 self-start rounded-md"
+		>Назад к статьям</a
+	>
+	<div>
+		<h1 class="text-4xl lg:text-6xl mb-4 font-black">
+			{post.data.title}
+		</h1>
+		<p>{post.data.description}</p>
+	</div>
+	<div class="p-4 bg-white rounded-xl items-center flex flex-wrap justify-between gap-3">
+		<div class="flex gap-3 flex-wrap">
+			{
+				post.data.tags &&
+					post.data.tags.map(tag => (
+						<span class="text-sm font-medium text-zinc-800">🏷 {tag}</span>
+					))
+			}
+		</div>
+		{
+			post.data.pubDate && (
+				<time datetime={post.data.pubDate} class="text-zinc-600">
+					🗓 Дата публикации:
+					<b>
+						{new Date(post.data.pubDate).toLocaleDateString("ru-RU", {
+							year: "numeric",
+							month: "numeric",
+							day: "numeric",
+						})}
+					</b>
+				</time>
+			)
+		}
+	</div>
+
+	<main
+		class="prose max-w-none prose-lg prose-a:underline prose-a:underline-offset-4 prose-blue xl:prose-xl"
+	>
+		<Content />
+	</main>
+</Layout>

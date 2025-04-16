@@ -1,0 +1,71 @@
+---
+import { Icon } from "astro-icon/components"
+import { Image } from "astro:assets"
+
+const { data, id, favorite } = Astro.props
+---
+
+
+
+<a href={`/posts/${id}`} class="hover-top" aria-label={data.title}>
+	<article class={`bg-white relative -z-0 items-center sm:flex rounded-t-xl`}>
+		{
+			favorite ? (
+				<div class="absolute top-0 right-0 bg-green-500 rounded-lg px-3 py-1.5 text-white text-sm flex gap-1 items-center font-medium">
+					<>
+						<Icon name="mdi:cards-heart" />
+						<span>Важное</span>
+					</>
+				</div>
+			) : (
+				""
+			)
+		}
+
+		{
+			data.ogImage ? (
+				<Image
+					src={data.ogImage}
+					title={data.title}
+					aria-label={data.title}
+					class="rounded-tl-xl object-cover bg-center sm:max-w-[220px] h-[220px]"
+					alt={`Изображения поста: ${data.title}`}
+					format={"webp"}
+					quality={10}
+				/>
+			) : (
+				<div class="rounded-xl bg-zinc-900 max-w-[220px] h-[220px]" />
+			)
+		}
+
+		<div class="flex gap-3 p-5 flex-col">
+			<h3 class="text-xl line-clamp-2 font-semibold text-balance">{data.title}</h3>
+			<p class="line-clamp-2 italic text-pretty text-sm text-zinc-500">
+				{data.description}
+			</p>
+
+			{
+				data.pubDate && (
+					<time datetime={data.pubDate} class="text-zinc-600">
+						🗓
+						{new Date(data.pubDate).toLocaleDateString("ru-RU", {
+							year: "numeric",
+							month: "numeric",
+							day: "numeric",
+						})}
+					</time>
+				)
+			}
+		</div>
+	</article>
+	<div
+		class="flex bg-white border-[0.6px] border-zinc-200 rounded-b-xl p-3 flex-wrap gap-2"
+	>
+		{
+			data.tags &&
+				data.tags.map(tag => (
+					<span class="text-xs font-bold text-zinc-800">🏷 {tag}</span>
+				))
+		}
+	</div>
+</a>
