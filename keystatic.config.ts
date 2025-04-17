@@ -4,7 +4,8 @@ import { config } from "@keystatic/core"
 
 export default config({
 	storage: {
-		kind: "local",
+		kind: "github",
+		repo: "shnvda/vda-site-main",
 	},
 	collections: {
 		posts,
