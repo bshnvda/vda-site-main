@@ -3,6 +3,7 @@ const posts = await getAllPosts("posts")
 import { getAllPosts } from "@/lib/getPosts"
 import getTaxonomy from "@/lib/getTaxonomy"
 import { slugify } from "@/lib/utils"
+import { getCollection } from "astro:content"
 import TagLink from "./TagLink.astro"
 
 const countPostsByTag = (posts, tagField = "tags") => {
@@ -19,6 +20,8 @@ const countPostsByTag = (posts, tagField = "tags") => {
 }
 const tags = await getTaxonomy("posts", "tags")
 const tagCounts = countPostsByTag(posts)
+const tagsCollection = await getCollection("tags")
+const tagTitleMap = Object.fromEntries(tagsCollection.map(tag => [tag.id, tag.data.title]))
 const { pathname } = Astro.url
 ---
 
@@ -34,7 +37,7 @@ const { pathname } = Astro.url
 		tags &&
 			tags.map(tag => (
 				<TagLink href={`/tags/${slugify(tag)}`}>
-					{tag} <b class="text-sm"> ({tagCounts[tag] || 0})</b>
+					{tagTitleMap[tag] || tag} <b class="text-sm"> ({tagCounts[tag] || 0})</b>
 				</TagLink>
 			))
 	}

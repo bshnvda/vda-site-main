@@ -1,0 +1,107 @@
+<div
+	id="pwa-install-banner"
+	class="hidden fixed bottom-4 left-1/2 z-[100] w-[min(760px,calc(100%-2rem))] -translate-x-1/2"
+>
+	<div class="glass-card p-4 md:p-5">
+		<div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+			<div class="pr-2">
+				<p class="text-sm font-semibold text-slate-900">Установить приложение</p>
+				<p class="text-sm text-slate-600">
+					Добавьте сайт на экран устройства для быстрого запуска и офлайн-доступа.
+				</p>
+			</div>
+			<div class="flex gap-2">
+				<button
+					id="pwa-later-btn"
+					type="button"
+					class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-400"
+				>
+					Позже
+				</button>
+				<button
+					id="pwa-install-btn"
+					type="button"
+					class="rounded-full bg-[#0a84ff] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0066d6]"
+				>
+					Установить
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script is:inline>
+	const INSTALL_KEY = "vda_pwa_installed";
+	const DISMISS_UNTIL_KEY = "vda_pwa_dismiss_until";
+	const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
+	let deferredPrompt = null;
+
+	const banner = document.getElementById("pwa-install-banner");
+	const installBtn = document.getElementById("pwa-install-btn");
+	const laterBtn = document.getElementById("pwa-later-btn");
+
+	const isStandalone = () =>
+		window.matchMedia("(display-mode: standalone)").matches ||
+		window.navigator.standalone === true;
+	const isIOS = () => /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+
+	const hideBanner = () => {
+		banner?.classList.add("hidden");
+	};
+
+	const showBanner = () => {
+		banner?.classList.remove("hidden");
+	};
+
+	const shouldDelayBanner = () => {
+		const dismissUntil = Number(localStorage.getItem(DISMISS_UNTIL_KEY) || "0");
+		return Date.now() < dismissUntil;
+	};
+
+	const markInstalled = () => {
+		localStorage.setItem(INSTALL_KEY, "1");
+		localStorage.removeItem(DISMISS_UNTIL_KEY);
+		hideBanner();
+	};
+
+	const markLater = () => {
+		localStorage.setItem(DISMISS_UNTIL_KEY, String(Date.now() + TWO_DAYS_MS));
+		hideBanner();
+	};
+
+	if (isStandalone() || localStorage.getItem(INSTALL_KEY) === "1") {
+		markInstalled();
+	}
+
+	if (!isStandalone() && !shouldDelayBanner() && isIOS()) {
+		showBanner();
+	}
+
+	window.addEventListener("appinstalled", () => {
+		markInstalled();
+	});
+
+	window.addEventListener("beforeinstallprompt", event => {
+		event.preventDefault();
+		deferredPrompt = event;
+		if (!shouldDelayBanner() && !isStandalone()) {
+			showBanner();
+		}
+	});
+
+	installBtn?.addEventListener("click", async () => {
+		if (isIOS() && !deferredPrompt) {
+			window.alert("В Safari: Поделиться → На экран «Домой». После установки баннер исчезнет.");
+			return;
+		}
+		if (!deferredPrompt) return;
+		deferredPrompt.prompt();
+		await deferredPrompt.userChoice;
+		deferredPrompt = null;
+		hideBanner();
+	});
+
+	laterBtn?.addEventListener("click", () => {
+		markLater();
+	});
+</script>

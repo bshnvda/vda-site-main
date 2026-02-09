@@ -1,0 +1,19 @@
+{
+  "name": "ВДА БШН",
+  "short_name": "ВДА БШН",
+  "description": "Группа БШН: статьи, материалы и ссылки",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#0a84ff",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

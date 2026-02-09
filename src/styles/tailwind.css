@@ -2,10 +2,30 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --font-display: font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-text: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 @layer base {
+  :root {
+    --accent: #0a84ff;
+    --accent-strong: #0066d6;
+    --surface: #f5f7fb;
+    --surface-strong: #ffffff;
+    --text-main: #0b1320;
+    --text-muted: #4a5565;
+  }
+
+  html,
+  body {
+    font-family: var(--font-text);
+    color: var(--text-main);
+    background:
+      radial-gradient(1200px 600px at -10% -10%, #dbeafe 0%, transparent 50%),
+      radial-gradient(900px 500px at 110% 0%, #e0f2fe 0%, transparent 55%),
+      linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+  }
+
   h1,
   h2,
   h3,
@@ -13,6 +33,7 @@
   h5,
   h6 {
     @apply text-balance;
+    font-family: var(--font-display);
   }
 
   p {
@@ -20,28 +41,56 @@
   }
 
   .a {
-			@apply bg-white rounded-lg px-3 py-1.5 text-zinc-600 border-[0.6px] border-zinc-200;
-		}
-		.a.active {
-			@apply bg-green-200 text-green-700 rounded-lg px-3 py-1.5 border-[0.6px] border-green-400;
-		}
+    @apply rounded-full px-4 py-2 text-sm font-medium border transition-all duration-200;
+    color: #334155;
+    border-color: #d8e0ea;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
+  }
 
+  .a:hover {
+    color: var(--accent-strong);
+    border-color: #b7d7ff;
+    background: #ffffff;
+  }
 
-  /* a {
-    @apply underline text-blue-500 underline-offset-4;
-  } */
+  .a.active {
+    color: #ffffff;
+    border-color: var(--accent);
+    background: linear-gradient(180deg, #2f95ff 0%, #0a84ff 100%);
+    box-shadow: 0 12px 24px rgba(10, 132, 255, 0.3);
+  }
 }
 
 @layer components {
   .heading-h1 {
-    @apply text-5xl text-zinc-800 font-black tracking-tight;
+    @apply text-4xl md:text-5xl text-slate-900 font-black tracking-tight;
   }
 
   .heading-h2 {
-    @apply text-2xl text-zinc-700 font-bold;
+    @apply text-2xl text-slate-800 font-bold;
   }
 
   .heading-h3 {
-    @apply text-xl text-zinc-600 font-medium;
+    @apply text-xl text-slate-700 font-medium;
+  }
+
+  .glass-card {
+    @apply rounded-3xl border;
+    border-color: rgba(148, 163, 184, 0.26);
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(14px);
+    box-shadow:
+      0 22px 45px rgba(15, 23, 42, 0.08),
+      0 2px 1px rgba(255, 255, 255, 0.55) inset;
+  }
+
+  .soft-link {
+    @apply transition-colors duration-200;
+    color: var(--accent);
+  }
+
+  .soft-link:hover {
+    color: var(--accent-strong);
   }
 }

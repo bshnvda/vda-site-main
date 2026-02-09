@@ -23,22 +23,10 @@ export const posts = collection({
 				kind: "today",
 			},
 		}),
-		tags: fields.multiselect({
+		tags: fields.multiRelationship({
 			label: "Теги к посту",
-			description: "Выберите теги",
-			options: [
-				{ label: "12 шагов", value: "12 шагов" },
-				{ label: "12 традиций", value: "12 традиций" },
-				{ label: "Семинар", value: "Семинар" },
-				{ label: "Спонсор", value: "Спонсор" },
-				{ label: "Новости", value: "Новости" },
-				{ label: "Черты ВДА", value: "Черты ВДА" },
-				{ label: "Программа ВДА", value: "Программа ВДА" },
-				{ label: "Информация", value: "Информация" },
-				{ label: "Для групп", value: "Для групп" },
-				{ label: "Инструменты", value: "Инструменты" },
-				{ label: "Руководство", value: "Руководство" },
-			],
+			description: "Выберите существующие теги или создайте новые в разделе «Теги»",
+			collection: "tags",
 		}),
 		ogImage: fields.image({
 			label: "Изображение поста",

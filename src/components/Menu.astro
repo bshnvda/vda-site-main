@@ -1,5 +1,5 @@
 ---
-import { links, tg_links } from "@/data/links"
+import { links } from "@/data/links"
 import { cn } from "@/utils/cn"
 import { Icon } from "astro-icon/components"
 ---
@@ -13,7 +13,7 @@ import { Icon } from "astro-icon/components"
 					title={link.label}
 					target={link.target}
 					class={cn(
-						"text-zinc-700 flex items-center gap-1 transition-colors hover:text-zinc-600",
+						"rounded-full px-3.5 py-2 text-sm font-medium text-slate-700 flex items-center gap-1.5 transition-all hover:bg-blue-50 hover:text-blue-700",
 						link.style,
 					)}
 				>
@@ -24,66 +24,90 @@ import { Icon } from "astro-icon/components"
 	}
 </nav>
 
-<button
-	title="Мобильное меню"
-	id="open"
-	class="text-white md:hidden flex items-center gap-1 bg-black px-3.5 py-1.5 rounded-lg"
-	><Icon name="mdi:menu-swap" /><span class="font-medium">меню</span></button
->
+<div class="md:hidden">
+	<button
+		title="Мобильное меню"
+		id="mobile-menu-toggle"
+		aria-controls="mobile-menu-panel"
+		aria-expanded="false"
+		class="text-white flex items-center gap-1 bg-[#0a84ff] px-4 py-2 rounded-full shadow-[0_12px_24px_rgba(10,132,255,0.33)]"
+	>
+		<Icon name="mdi:menu-swap" />
+		<span class="font-medium" id="mobile-menu-label">Меню</span>
+	</button>
 
-<div
-	id="menu"
-	class="hidden z-50 absolute w-full p-12 justify-center flex items-start h-full bg-black/60 backdrop-blur-2xl top-[75px] left-0"
->
-	<nav class="flex gap-5 flex-col items-center">
-		{
-			links &&
-				links.map(link => (
-					<a
-						href={link.href}
-						title={link.label}
-						target={link.target}
-						class={cn("text-white text-2xl flex items-center gap-1", link.style)}
-					>
-						<Icon name={link.icon} />
-						<span>{link.label}</span>
-					</a>
-				))
-		}
-	</nav>
-	<!-- <nav class="flex gap-2 flex-col items-center">
-		{
-			tg_links &&
-				tg_links.map(link => (
-					<a
-						href={link.link}
-						title={link.label}
-						target="_blank"
-						class="text-white flex items-center gap-1"
-					>
-						<span>{link.label}</span>
-					</a>
-				))
-		}
-	</nav> -->
+	<div
+		id="mobile-menu-panel"
+		class="fixed left-0 right-0 top-[84px] z-[90] px-4 opacity-0 invisible pointer-events-none -translate-y-2 transition-all duration-200"
+	>
+		<nav class="glass-card mx-auto w-full max-w-md p-4 flex gap-3 flex-col items-stretch">
+			{
+				links &&
+					links.map(link => (
+						<a
+							href={link.href}
+							title={link.label}
+							target={link.target}
+							class={cn(
+								"rounded-2xl border border-slate-200/70 bg-white/85 px-4 py-3 text-slate-800 text-lg flex items-center gap-2",
+								link.style,
+							)}
+						>
+							<Icon name={link.icon} />
+							<span>{link.label}</span>
+						</a>
+					))
+			}
+		</nav>
+	</div>
 </div>
 
 <script>
-	const menu = document.querySelector("#menu")
-	const menuBtn = document.querySelector("#open")
-	const body = document.querySelector("body")
+	const menuPanel = document.querySelector("#mobile-menu-panel")
+	const menuBtn = document.querySelector("#mobile-menu-toggle")
+	const menuLabel = document.querySelector("#mobile-menu-label")
+	const body = document.body
+	const menuLinks = document.querySelectorAll("#mobile-menu-panel a")
+	const OPEN_CLASS = "is-open"
 
-	const menuLinks = document.querySelectorAll("#menu a")
+	const setOpenState = isOpen => {
+		menuPanel?.classList.toggle(OPEN_CLASS, isOpen)
+		menuBtn?.setAttribute("aria-expanded", String(isOpen))
+		menuLabel && (menuLabel.textContent = isOpen ? "Закрыть" : "Меню")
+		body.classList.toggle("overflow-hidden", isOpen)
+	}
+
+	menuBtn?.addEventListener("click", event => {
+		event.stopPropagation()
+		const isOpen = menuPanel?.classList.contains(OPEN_CLASS)
+		setOpenState(!isOpen)
+	})
 
 	menuLinks.forEach(link => {
-		link.addEventListener("click", () => {
-			menu?.classList.add("hidden")
-			body?.classList.remove("overflow-hidden")
-		})
+		link.addEventListener("click", () => setOpenState(false))
 	})
 
-	menuBtn?.addEventListener("click", () => {
-		menu?.classList.toggle("hidden")
-		body?.classList.toggle("overflow-hidden")
+	document.addEventListener("click", event => {
+		const target = event.target
+		if (!menuPanel?.contains(target) && !menuBtn?.contains(target)) {
+			setOpenState(false)
+		}
+	})
+
+	window.addEventListener("keydown", event => {
+		if (event.key === "Escape") setOpenState(false)
+	})
+
+	window.addEventListener("resize", () => {
+		if (window.innerWidth >= 768) setOpenState(false)
 	})
 </script>
+
+<style>
+	#mobile-menu-panel.is-open {
+		opacity: 1;
+		visibility: visible;
+		pointer-events: auto;
+		transform: translateY(0);
+	}
+</style>

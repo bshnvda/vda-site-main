@@ -1,5 +1,8 @@
 ---
+import { keystaticReader } from "@/lib/keystatic"
 
+const footerEntry = await keystaticReader.singletons.footer.read()
+const logoText = footerEntry?.logoText || "🧑‍🎓👩🏼‍🎓 Б.Ш.Н 🥳🤗"
 ---
 
-<a href="/" class="text-lg font-bold">🧑‍🎓👩🏼‍🎓 Б.Ш.Н 🥳🤗</a>
+<a href="/" class="text-base md:text-lg font-semibold tracking-tight text-slate-900">{logoText}</a>

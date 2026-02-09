@@ -5,6 +5,7 @@ import Layout from "@/layouts/Layout.astro"
 import { getAllPosts } from "@/lib/getPosts"
 import getTaxonomy from "@/lib/getTaxonomy"
 import taxonomyFilter from "@/lib/taxonomyFilter"
+import { getCollection } from "astro:content"
 import { slugify, slugifyReverse } from "@/lib/utils"
 
 export async function getStaticPaths() {
@@ -20,11 +21,13 @@ export async function getStaticPaths() {
 const { tag } = Astro.params
 const posts = await getAllPosts("posts")
 const filterByTags = taxonomyFilter(posts, "tags", tag)
+const tagsCollection = await getCollection("tags")
+const currentTagTitle = tagsCollection.find(item => item.id === tag)?.data.title || slugifyReverse(tag)
 ---
 
 <Layout
 	data-pagefind-ignore
-	title={`Архив: ${slugifyReverse(tag)}`}
+	title={`Архив: ${currentTagTitle}`}
 	description="Статьи группы Б.Ш.Н."
 >
 	<Tags />

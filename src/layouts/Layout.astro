@@ -2,6 +2,7 @@
 import Container from "@/components/Container.astro"
 import Footer from "@/components/Footer.astro"
 import Header from "@/components/Header.astro"
+import InstallPrompt from "@/components/InstallPrompt.astro"
 import SEO from "@/components/SEO.astro"
 import "@/styles/tailwind.css"
 
@@ -42,9 +43,7 @@ const {
 			dateModified={dateModified}
 		/>
 	</head>
-	<body
-		class={`${bodyStyle || ""} flex min-h-screen flex-col text-zinc-900 bg-[#F2F2F2]`}
-	>
+	<body class={`${bodyStyle || ""} flex min-h-screen flex-col text-zinc-900`}>
 		<Header />
 		<Container class="py-20">
 			<div class="flex flex-col gap-12">
@@ -52,5 +51,13 @@ const {
 			</div>
 		</Container>
 		<Footer />
+		<InstallPrompt />
+		<script is:inline>
+			if ("serviceWorker" in navigator) {
+				window.addEventListener("load", () => {
+					navigator.serviceWorker.register("/sw.js").catch(() => {});
+				});
+			}
+		</script>
 	</body>
 </html>

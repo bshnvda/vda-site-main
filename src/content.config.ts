@@ -22,6 +22,13 @@ const pageIndex = defineCollection({
 	}),
 })
 
+const tags = defineCollection({
+	loader: glob({ pattern: "**/*.yaml", base: "./src/data/tags/" }),
+	schema: z.object({
+		title: z.string(),
+	}),
+})
+
 const pages = defineCollection({
 	loader: glob({ pattern: "**/*.(md|mdx)", base: "./src/data/pages/" }),
 	schema: z.object({
@@ -32,4 +39,4 @@ const pages = defineCollection({
 	}),
 })
 
-export const collections = { posts, pages, pageIndex }
+export const collections = { posts, pages, pageIndex, tags }

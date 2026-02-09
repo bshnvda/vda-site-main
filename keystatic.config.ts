@@ -1,14 +1,27 @@
-import { pageIndex } from "@/fileds/pageIndex"
-import { posts } from "@/fileds/posts"
-import { config } from "@keystatic/core"
+import { footer } from "@/fileds/footer";
+import { pageIndex } from "@/fileds/pageIndex";
+import { posts } from "@/fileds/posts";
+import { tags } from "@/fileds/tags";
+import { config } from "@keystatic/core";
+
+const isDev = import.meta.env.DEV
 
 export default config({
-	storage: {
-		kind: "github",
-		repo: "bshnvda/vda-site-main",
-	},
+   ui: {
+    brand: { name: 'ВДА группа БШН' },
+  },
+	storage: isDev
+		? { kind: "local" }
+		: {
+				kind: "github",
+				repo: "bshnvda/vda-site-main",
+			},
 	collections: {
 		posts,
 		pageIndex,
+		tags,
 	},
-})
+	singletons: {
+		footer,
+	},
+});
