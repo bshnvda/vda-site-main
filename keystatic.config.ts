@@ -4,13 +4,20 @@ import { posts } from "@/fileds/posts";
 import { tags } from "@/fileds/tags";
 import { config } from "@keystatic/core";
 
-const isDev = import.meta.env.DEV
+const isLocalMode =
+	process.env.NODE_ENV !== "production" ||
+	process.env.KEYSTATIC_LOCAL === "true";
+const hasGithubEnv =
+	Boolean(process.env.KEYSTATIC_GITHUB_CLIENT_ID) &&
+	Boolean(process.env.KEYSTATIC_GITHUB_CLIENT_SECRET) &&
+	Boolean(process.env.KEYSTATIC_SECRET) &&
+	Boolean(process.env.PUBLIC_KEYSTATIC_GITHUB_APP_SLUG);
 
 export default config({
-   ui: {
-    brand: { name: 'ВДА группа БШН' },
-  },
-	storage: isDev
+	ui: {
+		brand: { name: "ВДА группа БШН" },
+	},
+	storage: isLocalMode || !hasGithubEnv
 		? { kind: "local" }
 		: {
 				kind: "github",

@@ -1,6 +1,14 @@
 
 ## Админ-панель (Keystatic)
 
+Для продакшена (`storage: github`) на Vercel должны быть заданы переменные:
+
+- `KEYSTATIC_GITHUB_CLIENT_ID`
+- `KEYSTATIC_GITHUB_CLIENT_SECRET`
+- `KEYSTATIC_SECRET`
+- `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`
+
+Если хотя бы одной переменной нет, проект автоматически переключается в `local`-режим Keystatic (чтобы `/keystatic` не падал с 500).
 
 ### Что можно изменять в админке
 
