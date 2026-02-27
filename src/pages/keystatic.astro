@@ -1,0 +1,22 @@
+---
+import KeystaticLayout from "../layouts/KeystaticLayout.astro";
+const isAdmin = Astro.url.pathname.startsWith("/keystatic");
+---
+
+{!isAdmin && <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-XXXX" />}
+<KeystaticLayout title="Keystatic">
+	<div id="keystatic-root"></div>
+
+	<script type="module">
+		import("/@keystatic/astro/client").catch(() => {
+			document.body.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif">
+          <div>
+            <h2>Ошибка загрузки админки</h2>
+            <button onclick="location.reload()">Обновить</button>
+          </div>
+        </div>
+      `;
+		});
+	</script>
+</KeystaticLayout>
