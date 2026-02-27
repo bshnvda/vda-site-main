@@ -21,7 +21,7 @@ export default defineConfig({
 		prefetchAll: true,
 	},
 
-	integrations: [mdx(), keystatic(), sitemap(), icon(), metaTags(), react()],
-	output: "static",
+	integrations: [mdx(), sitemap(), icon(), metaTags(), react(), keystatic()],
 	adapter: vercel(),
+	output: "static",
 });

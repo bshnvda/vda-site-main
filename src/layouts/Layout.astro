@@ -5,6 +5,7 @@ import Header from "@/components/Header.astro"
 import InstallPrompt from "@/components/InstallPrompt.astro"
 import SEO from "@/components/SEO.astro"
 import "@/styles/tailwind.css"
+const isAdmin = Astro.url.pathname.startsWith('/keystatic');
 
 interface Props {
 	title: string
@@ -42,6 +43,31 @@ const {
 			datePublished={datePublished}
 			dateModified={dateModified}
 		/>
+   {!isAdmin && (
+  <>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXX');
+    </script>
+  </>
+)}
+
+{isAdmin && (
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval';
+      style-src 'self' 'unsafe-inline';
+      connect-src 'self';
+      img-src 'self' data:;
+    "
+  />
+)}
+
 	</head>
 	<body class={`${bodyStyle || ""} flex min-h-screen flex-col text-zinc-900`}>
 		<Header />
